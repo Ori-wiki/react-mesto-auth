@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
 import api from "../utils/Api.js";
-import auth from "../utils/auth.js";
+import auth from "../utils/Auth.js";
 import Header from "./Header.js";
 import Main from "./Main.js";
 import Footer from "./Footer.js";
@@ -13,10 +13,14 @@ import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 import Login from "./Login.js";
 import Register from "./Register.js";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = React.useState(false);
+  const [isSuccessRegister, setIsSuccessRegister] = React.useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
+  const [isUserEmail, setIsUserEmail] = React.useState(null);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
     React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
@@ -51,6 +55,9 @@ function App() {
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
+  // function handleInfoTooltipOpen() {
+  //   setIsInfoTooltipOpen(true);
+  // }
   function handleCardClick(card) {
     setSelectedCard(card);
   }
@@ -61,20 +68,42 @@ function App() {
     setSelectedCard({});
   }
   function handleRegister(data) {
-    auth.register(data).then((res) => {
-      console.log(res);
-      navigate("/sign-in");
-    });
+    auth
+      .register(data)
+      .then((res) => {
+        setIsSuccessRegister(true);
+        setIsInfoTooltipOpen(true);
+        navigate("/sign-in");
+      })
+      .catch((err) => {
+        setIsInfoTooltipOpen(true);
+        setIsSuccessRegister(false);
+      });
   }
   function handleLogin(data) {
-    auth.authorize(data).then((data) => {
-      localStorage.setItem("jwt", data.jwt);
-      setLoggedIn(true);
-      navigate("/");
-
-      console.log("nasral");
-    });
+    auth
+      .authorize(data)
+      .then((data) => {
+        localStorage.setItem("jwt", data.token);
+        setLoggedIn(true);
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
   }
+  function handleTokenCheck() {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      auth.getContent(jwt).then((res) => {
+        setIsUserEmail(res.data.email);
+        setLoggedIn(true);
+        navigate("/");
+      });
+    }
+  }
+  React.useEffect(() => {
+    handleTokenCheck();
+  }, []);
+
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
@@ -114,13 +143,12 @@ function App() {
         setCards([res, ...cards]);
         closeAllPopups();
       })
-      .catch((err) => console.log(err))
       .catch((err) => console.log(err));
   }
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header loggedIn={loggedIn} isUserEmail={isUserEmail} />
         <Routes>
           <Route
             path="/sign-in"
@@ -132,9 +160,10 @@ function App() {
           />
           <Route
             path="/"
-            exact
             element={
-              <Main
+              <ProtectedRoute
+                element={Main}
+                loggedIn={loggedIn}
                 onEditProfile={handleEditProfileClick}
                 onAddPlace={handleAddPlaceClick}
                 onEditAvatar={handleEditAvatarClick}
@@ -145,7 +174,7 @@ function App() {
               />
             }
           />
-          <Route path="*" />
+          {/* <Route path="*" /> */}
         </Routes>
 
         <Footer />
