@@ -1,0 +1,37 @@
+.card {
+  width: 282px;
+  margin: 0;
+  padding: 0;
+  justify-self: center;
+  border-radius: 10px;
+  background-color: #FFF;
+  position: relative;
+  transition: all 0.2s linear;
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 896px) {
+  .card {
+    justify-self: end;
+  }
+
+  .card:nth-child(2n) {
+    justify-self: start;
+  }
+
+}
+
+@media screen and (max-width: 600px) {
+  .card {
+    justify-self: center;
+  }
+
+  .card:nth-child(2n) {
+    justify-self: center;
+  }
+}
+
+.card:hover {
+  transform: scale(1.05);
+}

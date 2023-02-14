@@ -1,0 +1,24 @@
+.header {
+  max-width: 880px;
+  margin: 45px auto 40px;
+  width: 100%;
+}
+
+.header::after {
+  content: "";
+  display: block;
+  border: 0;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+  padding-top: 40px;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 880px) {
+  .header {
+    margin: 28px auto 40px;
+  }
+
+  .header::after {
+    padding-top: 31px;
+  }
+}

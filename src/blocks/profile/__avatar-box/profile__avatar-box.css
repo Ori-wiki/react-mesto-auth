@@ -1,0 +1,8 @@
+.profile__avatar-box {
+  position: relative;
+}
+
+.profile__avatar-box:hover>.profile__avatar-edit-button {
+  visibility: visible;
+  opacity: 1;
+}

@@ -1,0 +1,6 @@
+.popup__fullScreen {
+  padding: 0;
+  position: relative;
+  justify-content: center;
+  z-index: 3;
+}
