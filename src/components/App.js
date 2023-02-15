@@ -91,7 +91,7 @@ function App() {
       })
       .catch((err) => console.log(err));
   }
-  function handleTokenCheck() {
+  const handleTokenCheck = React.useCallback(() => {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
       auth.getContent(jwt).then((res) => {
@@ -100,10 +100,11 @@ function App() {
         navigate("/");
       });
     }
-  }
+  }, [navigate]);
+
   React.useEffect(() => {
     handleTokenCheck();
-  }, []);
+  }, [handleTokenCheck]);
   function handleSingOut() {
     setLoggedIn(false);
     localStorage.removeItem("jwt");
