@@ -56,9 +56,6 @@ function App() {
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
-  // function handleInfoTooltipOpen() {
-  //   setIsInfoTooltipOpen(true);
-  // }
   function handleCardClick(card) {
     setSelectedCard(card);
   }
@@ -66,6 +63,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsInfoTooltipOpen(false);
     setSelectedCard({});
   }
   function handleRegister(data) {
@@ -77,6 +75,7 @@ function App() {
         navigate("/sign-in");
       })
       .catch((err) => {
+        console.log(err);
         setIsInfoTooltipOpen(true);
         setIsSuccessRegister(false);
       });
