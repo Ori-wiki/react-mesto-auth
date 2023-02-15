@@ -1,0 +1,14 @@
+.header__adress {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #ffffff;
+  padding: 10px 0;
+}
+
+@media screen and (min-width: 768px) {
+  .header__address {
+    margin-right: 24px;
+  }
+}

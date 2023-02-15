@@ -13,6 +13,7 @@ import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 import Login from "./Login.js";
 import Register from "./Register.js";
+import InfoTooltip from "./InfoTooltip";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
@@ -86,6 +87,7 @@ function App() {
       .then((data) => {
         localStorage.setItem("jwt", data.token);
         setLoggedIn(true);
+        handleTokenCheck();
         navigate("/");
       })
       .catch((err) => console.log(err));
@@ -103,7 +105,11 @@ function App() {
   React.useEffect(() => {
     handleTokenCheck();
   }, []);
-
+  function handleSingOut() {
+    setLoggedIn(false);
+    localStorage.removeItem("jwt");
+    navigate("/sign-in");
+  }
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
@@ -148,7 +154,11 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header loggedIn={loggedIn} isUserEmail={isUserEmail} />
+        <Header
+          loggedIn={loggedIn}
+          isUserEmail={isUserEmail}
+          onSingOut={handleSingOut}
+        />
         <Routes>
           <Route
             path="/sign-in"
@@ -194,6 +204,11 @@ function App() {
           onUpdateAvatar={handleUpdateAvatar}
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllPopups}
+          isSuccess={isSuccessRegister}
+        />
       </div>
     </CurrentUserContext.Provider>
   );
