@@ -80,23 +80,26 @@ function App() {
         setIsSuccessRegister(false);
       });
   }
-  function handleLogin(data) {
+  function handleLogin({ email, password }) {
     auth
-      .authorize(data)
+      .authorize(email, password)
       .then((data) => {
         localStorage.setItem("jwt", data.token);
         setLoggedIn(true);
-        handleTokenCheck();
+        setIsUserEmail(email);
         navigate("/");
       })
       .catch((err) => console.log(err));
   }
   const handleTokenCheck = React.useCallback(() => {
     const jwt = localStorage.getItem("jwt");
+
     if (jwt) {
       auth.getContent(jwt).then((res) => {
         setIsUserEmail(res.data.email);
+
         setLoggedIn(true);
+
         navigate("/");
       });
     }
@@ -105,6 +108,7 @@ function App() {
   React.useEffect(() => {
     handleTokenCheck();
   }, [handleTokenCheck]);
+
   function handleSingOut() {
     setLoggedIn(false);
     localStorage.removeItem("jwt");
@@ -154,11 +158,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header
-          loggedIn={loggedIn}
-          isUserEmail={isUserEmail}
-          onSingOut={handleSingOut}
-        />
+        <Header isUserEmail={isUserEmail} onSingOut={handleSingOut} />
         <Routes>
           <Route
             path="/sign-in"

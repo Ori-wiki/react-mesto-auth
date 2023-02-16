@@ -26,7 +26,7 @@ class Auth {
     }).then((res) => this._checkResult(res));
   };
 
-  authorize = (data) => {
+  authorize = (email, password) => {
     return fetch(`${this._url}/signin`, {
       method: "POST",
       headers: {
@@ -34,8 +34,8 @@ class Auth {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        password: data.password,
-        email: data.email,
+        password: password,
+        email: email,
       }),
     }).then((res) => this._checkResult(res));
   };
