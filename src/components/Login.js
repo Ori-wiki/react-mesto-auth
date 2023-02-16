@@ -16,9 +16,7 @@ function Login({ handleLogin }) {
   }
   function handleSubmit(e) {
     e.preventDefault();
-    console.log("lofin");
     if (!userData.email || !userData.password) {
-      console.log("не совпадает");
       return;
     }
     handleLogin(userData);
